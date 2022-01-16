@@ -80,20 +80,23 @@ impl Entity for Player {
 
         if input.get_key_state(Key::D) == State::Down {
             self.position_x += self.speed * game_speed * delta_time;
-        } else if input.get_key_state(Key::A) == State::Down {
+        }
+        if input.get_key_state(Key::A) == State::Down {
             self.position_x -= self.speed * game_speed * delta_time;
         }
 
         // Don't let overflow
         if self.position_x > WALK_AREA_MAX_X {
             self.position_x = WALK_AREA_MAX_X;
-        } else if self.position_x < -WALK_AREA_MAX_X {
+        }
+        if self.position_x < -WALK_AREA_MAX_X {
             self.position_x = -WALK_AREA_MAX_X;
         }
 
         if input.get_key_state(Key::W) == State::Down {
             self.position_y += self.speed * game_speed * delta_time;
-        } else if input.get_key_state(Key::S) == State::Down {
+        }
+        if input.get_key_state(Key::S) == State::Down {
             self.position_y -= self.speed * game_speed * delta_time;
         }
 

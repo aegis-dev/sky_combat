@@ -82,7 +82,7 @@ impl Scene for Game {
         }
 
         renderer.set_background_color(FlaskColor::Teal as u8).unwrap();
-        renderer.set_camera_y(renderer.get_buffer_height() as i64 / 2);
+        renderer.set_camera_y(renderer.get_window_size().1 / 2);
     }
 
     fn on_update(&mut self, game_status: &mut GameStatus, renderer: &mut Renderer, input: &Input, delta_time: f64) -> Option<Box<dyn Scene>> {
@@ -188,11 +188,13 @@ impl Scene for Game {
             }
         }
 
+        let (window_w, window_h) = renderer.get_window_size();
+
         let score_text = String::from(format!("SCORE: {}", self.score));
-        renderer.text(&score_text, &self.font, -(renderer.get_buffer_width() as i64 / 2) + 5, renderer.get_buffer_height() as i64 - 10, FlaskColor::Purple as u8);
+        renderer.text(&score_text, &self.font, -(window_w / 2) + 5, window_h - 10, FlaskColor::Purple as u8);
 
         let lives_text = String::from(format!("LIVES: {}", self.player.health()));
-        renderer.text(&lives_text, &self.font, -(renderer.get_buffer_width() as i64 / 2) + 5, renderer.get_buffer_height() as i64 - 20, FlaskColor::Purple as u8);
+        renderer.text(&lives_text, &self.font, -(window_w / 2) + 5, window_h - 20, FlaskColor::Purple as u8);
 
         // Remove things
         enemies_to_remove.sort();
