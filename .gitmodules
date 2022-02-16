@@ -1,0 +1,3 @@
+[submodule "libs/flask"]
+	path = libs/flask
+	url = git@github.com:aegis-dev/flask.git
