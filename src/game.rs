@@ -17,6 +17,7 @@
 // along with Sky Combat. If not, see <https://www.gnu.org/licenses/>.
 //
 
+use flask::rand::Rand;
 use flask::scene::Scene;
 use flask::renderer::Renderer;
 use flask::game_status::GameStatus;
@@ -51,6 +52,7 @@ pub struct Game {
     explosions : Vec<Explosion>,
     clouds: Vec<Cloud>,
     sprite_bank: SpriteBank,
+    rng: Rand,
 }
 
 impl Game {
@@ -67,7 +69,8 @@ impl Game {
             player_projectiles: vec![],
             explosions: vec![],
             clouds: vec![],
-            sprite_bank: SpriteBank::new()
+            sprite_bank: SpriteBank::new(),
+            rng: Rand::new()
         }
     }
 }
@@ -78,7 +81,7 @@ impl Scene for Game {
         self.sprite_bank.add_sprite(Sprite::from_indexed_8bit_png(include_bytes!("../assets/enemy.png")).unwrap());
 
         for _ in 0..30 {
-            self.clouds.push(Cloud::new());
+            self.clouds.push(Cloud::new(&mut self.rng));
         }
 
         renderer.set_background_color(FlaskColor::Teal as u8).unwrap();
@@ -100,7 +103,7 @@ impl Scene for Game {
         self.spawn_timer -= delta_time * self.game_speed;
         if self.spawn_timer < 0.0 {
             self.spawn_timer = SPAWN_INTERVAL;
-            self.enemies.push(Enemy::new(5.0))
+            self.enemies.push(Enemy::new(5.0, self.rng.next_u64()))
         }
 
 

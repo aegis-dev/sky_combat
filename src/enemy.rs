@@ -17,9 +17,8 @@
 // along with Sky Combat. If not, see <https://www.gnu.org/licenses/>.
 //
 
-use rand::Rng;
-
 use flask::game_status::GameStatus;
+use flask::rand::Rand;
 use flask::renderer::Renderer;
 use flask::input::Input;
 use flask::sprite::{SpriteBank, SpriteID};
@@ -40,6 +39,7 @@ pub struct Enemy {
     behaviour: Behaviour,
     shoot_timer: f64,
     sprite_id: SpriteID,
+    rng: Rand,
 }
 
 enum Behaviour {
@@ -48,8 +48,9 @@ enum Behaviour {
 }
 
 impl Enemy {
-    pub fn new(speed: f64) -> Enemy {
-        let position_x = rand::thread_rng().gen_range(-WALK_AREA_MAX_X..WALK_AREA_MAX_X);
+    pub fn new(speed: f64, seed: u64) -> Enemy {
+        let mut rng = Rand::new_with_seed(seed);
+        let position_x = rng.next_i64_in_range(-WALK_AREA_MAX_X as i64, WALK_AREA_MAX_X as i64) as f64;
         let behaviour = match position_x < 0.0 {
             true => FlyL2R,
             false => FlyR2L
@@ -62,7 +63,8 @@ impl Enemy {
             position_y: WINDOW_HEIGHT as f64 + 50.0,
             behaviour,
             shoot_timer: SHOOT_INTERVAL,
-            sprite_id: SpriteID(1)
+            sprite_id: SpriteID(1),
+            rng,
         }
     }
 
@@ -110,21 +112,21 @@ impl Entity for Enemy {
             self.position_x as i64 - 2,
             self.position_y as i64 + 8,
             self.position_x as i64 - 2,
-            self.position_y as i64 + 8 + rand::thread_rng().gen_range(0..5),
+            self.position_y as i64 + 8 +  self.rng.next_i64_in_range(0, 5),
             FlaskColor::Yellow as u8
         );
         renderer.line(
             self.position_x as i64 - 1,
             self.position_y as i64 + 8,
             self.position_x as i64 - 1,
-            self.position_y as i64 + 8 + rand::thread_rng().gen_range(2..7),
+            self.position_y as i64 + 8 + self.rng.next_i64_in_range(2, 7),
             FlaskColor::White as u8
         );
         renderer.line(
             self.position_x as i64,
             self.position_y as i64 + 8,
             self.position_x as i64,
-            self.position_y as i64 + 8 + rand::thread_rng().gen_range(0..5),
+            self.position_y as i64 + 8 + self.rng.next_i64_in_range(0, 5),
             FlaskColor::Yellow as u8
         );
     }

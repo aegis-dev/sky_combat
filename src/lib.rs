@@ -26,6 +26,7 @@ mod game_over;
 mod explosion;
 mod cloud;
 
+use wasm_bindgen::prelude::wasm_bindgen;
 use flask::{
     game_context::GameContext,
     palette,
@@ -35,14 +36,13 @@ use crate::game::Game;
 
 pub const WINDOW_WIDTH: u32 = 256;
 pub const WINDOW_HEIGHT: u32 = 256;
+pub const FULLSCREEN: bool = false;
 
-fn main() {
-    let mut game_context = GameContext::new();
-
+#[wasm_bindgen(start)]
+pub fn start() {
     let game = Box::new(Game::new());
 
-    match game_context.run(WINDOW_WIDTH, WINDOW_HEIGHT, "Sky Combat", palette::flask_default(), game) {
-        Ok(_) => { }
-        Err(error) => println!("{}", error)
+    if let Err(error) = GameContext::run(WINDOW_WIDTH, WINDOW_HEIGHT, FULLSCREEN, palette::flask_default(), game) {
+        flask::log(format!("Flask error:\n{}", error).as_str());
     };
 }

@@ -17,13 +17,12 @@
 // along with Sky Combat. If not, see <https://www.gnu.org/licenses/>.
 //
 
-use rand::Rng;
-
 use flask::game_status::GameStatus;
 use flask::renderer::Renderer;
 use flask::input::{Input, Key, State};
 use flask::sprite::{SpriteBank, SpriteID};
 use flask::palette::FlaskColor;
+use flask::rand::Rand;
 
 use crate::entity::Entity;
 use crate::game::{WALK_AREA_MAX_X, WALK_AREA_MAX_Y};
@@ -37,6 +36,7 @@ pub struct Player {
     position_y: f64,
     shoot_timer: f64,
     sprite_id: SpriteID,
+    rng: Rand,
 }
 
 impl Player {
@@ -47,7 +47,8 @@ impl Player {
             position_x: 0.0,
             position_y: 25.0,
             shoot_timer: SHOOT_INTERVAL,
-            sprite_id: SpriteID(0)
+            sprite_id: SpriteID(0),
+            rng: Rand::new()
         }
     }
 
@@ -118,21 +119,21 @@ impl Entity for Player {
             self.position_x as i64 - 2,
             self.position_y as i64 - 9,
             self.position_x as i64 - 2,
-            self.position_y as i64 - 9 - rand::thread_rng().gen_range(0..5),
+            self.position_y as i64 - 9 - self.rng.next_i64_in_range(0, 5),
             FlaskColor::Red as u8
         );
         renderer.line(
             self.position_x as i64 - 1,
             self.position_y as i64 - 9,
             self.position_x as i64 - 1,
-            self.position_y as i64 - 9 - rand::thread_rng().gen_range(2..7),
+            self.position_y as i64 - 9 - self.rng.next_i64_in_range(2, 7),
             FlaskColor::Yellow as u8
         );
         renderer.line(
             self.position_x as i64,
             self.position_y as i64 - 9,
             self.position_x as i64,
-            self.position_y as i64 - 9 - rand::thread_rng().gen_range(0..5),
+            self.position_y as i64 - 9 - self.rng.next_i64_in_range(0, 5),
             FlaskColor::Red as u8
         );
     }

@@ -17,13 +17,12 @@
 // along with Sky Combat. If not, see <https://www.gnu.org/licenses/>.
 //
 
-use rand::Rng;
-
 use flask::game_status::GameStatus;
 use flask::renderer::Renderer;
 use flask::input::Input;
 use flask::palette::FlaskColor;
 use flask::sprite::SpriteBank;
+use flask::rand::Rand;
 
 use crate::entity::Entity;
 
@@ -34,6 +33,7 @@ pub struct Explosion {
     time_remaining: f64,
     position_x: f64,
     position_y: f64,
+    rng: Rand,
 }
 
 impl Explosion {
@@ -42,6 +42,7 @@ impl Explosion {
             time_remaining: EXPLOSION_TIME,
             position_x: position_x as f64,
             position_y: position_y as f64,
+            rng: Rand::new_with_seed((position_x + position_y) as u64),
         }
     }
 
@@ -55,9 +56,9 @@ impl Entity for Explosion {
         self.time_remaining -= game_speed  * delta_time;
 
         for _i in 0..10 {
-            let offset_x = rand::thread_rng().gen_range(-MAX_OFFSET..MAX_OFFSET);
-            let offset_y = rand::thread_rng().gen_range(-MAX_OFFSET..MAX_OFFSET);
-            let color = match rand::thread_rng().gen_bool(1.0 / 2.0) {
+            let offset_x = self.rng.next_i64_in_range(-MAX_OFFSET, MAX_OFFSET);
+            let offset_y = self.rng.next_i64_in_range(-MAX_OFFSET, MAX_OFFSET);
+            let color = match self.rng.next_bool() {
                 true => FlaskColor::Red,
                 false => FlaskColor::Yellow
             };

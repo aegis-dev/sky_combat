@@ -53,7 +53,7 @@ impl Scene for GameOver {
         renderer.text(&score_text, &self.font, -(4 * 3), -10, FlaskColor::Red as u8);
         renderer.text(&score, &self.font, -(4 * (score.len() as i64 / 2)) , -20, FlaskColor::Yellow as u8);
 
-        if input.get_key_state(Key::Return) == State::Down {
+        if input.get_key_state(Key::Enter) == State::Down {
             return Some(Box::new(Game::new()))
         }
 

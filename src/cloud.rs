@@ -17,9 +17,8 @@
 // along with Sky Combat. If not, see <https://www.gnu.org/licenses/>.
 //
 
-use rand::Rng;
-
 use flask::game_status::GameStatus;
+use flask::rand::Rand;
 use flask::renderer::Renderer;
 use flask::input::Input;
 use flask::palette::FlaskColor;
@@ -38,10 +37,10 @@ struct CloudPillow {
 }
 
 impl CloudPillow {
-    pub fn new() -> CloudPillow {
+    pub fn new(rng: &mut Rand) -> CloudPillow {
         CloudPillow {
-            position_x: rand::thread_rng().gen_range(-MAX_OFFSET_X..MAX_OFFSET_X) as f64,
-            position_y: rand::thread_rng().gen_range(-MAX_OFFSET_Y..MAX_OFFSET_Y) as f64,
+            position_x: rng.next_i64_in_range(-MAX_OFFSET_X, MAX_OFFSET_X) as f64,
+            position_y: rng.next_i64_in_range(-MAX_OFFSET_Y, MAX_OFFSET_Y) as f64,
         }
     }
 }
@@ -54,16 +53,16 @@ pub struct Cloud {
 }
 
 impl Cloud {
-    pub fn new() -> Cloud {
+    pub fn new(rng: &mut Rand) -> Cloud {
         let mut cloud_pillows = vec![];
-        for _ in 0..rand::thread_rng().gen_range(20..30) {
-            cloud_pillows.push(CloudPillow::new())
+        for _ in 0..rng.next_i64_in_range(20, 30) {
+            cloud_pillows.push(CloudPillow::new(rng))
         }
 
         Cloud {
-            position_x: rand::thread_rng().gen_range(-WALK_AREA_MAX_X..WALK_AREA_MAX_X) as f64,
-            position_y: rand::thread_rng().gen_range(0..WALK_AREA_MAX_Y as i64 + (MAX_OFFSET_Y + PILLOW_SIZE as i64)) as f64,
-            speed: rand::thread_rng().gen_range(2..5) as f64,
+            position_x: rng.next_i64_in_range(-WALK_AREA_MAX_X as i64, WALK_AREA_MAX_X as i64) as f64,
+            position_y: rng.next_i64_in_range(0, WALK_AREA_MAX_Y as i64 + (MAX_OFFSET_Y + PILLOW_SIZE as i64)) as f64,
+            speed: rng.next_i64_in_range(2, 5) as f64,
             cloud_pillows
         }
     }
