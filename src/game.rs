@@ -89,6 +89,8 @@ impl Scene for Game {
     }
 
     fn on_update(&mut self, game_status: &mut GameStatus, renderer: &mut Renderer, input: &Input, delta_time: f64) -> Option<Box<dyn Scene>> {
+        renderer.clear_screen();
+
         if input.get_key_state(Key::Escape) == State::Down {
             game_status.quit();
             return None;

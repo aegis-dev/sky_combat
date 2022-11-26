@@ -46,6 +46,8 @@ impl Scene for GameOver {
     }
 
     fn on_update(&mut self, game_status: &mut GameStatus, renderer: &mut Renderer, input: &Input, _delta_time: f64) -> Option<Box<dyn Scene>> {
+        renderer.clear_screen();
+
         let game_over = String::from("GAME OVER");
         let score_text = String::from("SCORE:");
         let score = String::from(format!("{}", self.score));
